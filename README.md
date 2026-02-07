@@ -1,0 +1,1 @@
+This project is demonstration to learning DOM manipulation while using asynchronous nature of javascript. This whole project is made upon just using js nothing else ,every component and element is madeup by using DOM, every component which is showing after clicking somewhere those also made by js DOM 
