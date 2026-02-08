@@ -12,7 +12,7 @@ function loadData() {
     function loadUserData() {
         let userData = {
                 username: "satya",
-                password: "satya51341"
+                password: "51341567893"
         }
         let userstring = JSON.stringify(userData);
         localStorage.setItem("user-Info", userstring);
@@ -220,6 +220,127 @@ function signUpValidation() {
 function signUp() {
     //create sign-UP page
 
+    //username field
+    let main = document.querySelector("#main");
+    let sigUpContainer = document.createElement("div");
+    sigUpContainer.setAttribute("style","width:400px;background-color:#f2ebb6;");
+    sigUpContainer.setAttribute("class","container mt-4 border border-1 border-warning p-4")
+    main.appendChild(sigUpContainer);
+
+    let formCaption = document.createElement('h4');
+    formCaption.setAttribute('style',"color:#858204;margin-left:35%;margin-right:30%;");
+    formCaption.innerText="Sign-Up";
+    sigUpContainer.appendChild(formCaption);
+
+    let signUPForm = document.createElement('form');
+    sigUpContainer.appendChild(signUPForm);
+
+    let signUpUsernameDiv = document.createElement('div');
+    signUpUsernameDiv.setAttribute("style","form-group");
+    signUPForm.appendChild(signUpUsernameDiv);
+
+    let signUpUsernameInput = document.createElement('input');
+    signUpUsernameInput.setAttribute('class',"form-control");
+    signUpUsernameInput.setAttribute('id',"signUp-username-Input");
+    signUpUsernameInput.setAttribute('type','text');
+    signUpUsernameInput.setAttribute('placeholder','enter username');
+    signUpUsernameDiv.appendChild(signUpUsernameInput);
+
+    let signUpUsernameError = document.createElement('small') ;
+    signUpUsernameError.setAttribute('class',"text-danger");
+    signUpUsernameDiv.appendChild(signUpUsernameError);
+
+    // let signUpuserNameReturn;
+    let signUpUsernameValue;
+    signUpUsernameInput.addEventListener('input',(event)=>{
+        let  signUpuserNameReturn= usernameValidation(event.target.value);
+        // signUpUsernameValue = event.target.value;
+        if(signUpuserNameReturn!=1){
+            console.log("error 1");
+            signUpUsernameError.innerText="username is required";
+            console.log("after text printing");
+        }
+        else{
+            signUpUsernameError =" ";
+        }
+    })
+
+
+    //password field
+    let signUpPassDiv = document.createElement('div');
+    signUpPassDiv.setAttribute("class","form-group pt-4");
+    signUPForm.appendChild(signUpPassDiv);
+
+    let signUpPassInput = document.createElement('input');
+    signUpPassInput.setAttribute('class',"form-control");
+    signUpPassInput.setAttribute('type','password');
+    signUpPassInput.setAttribute('id',"signUP-pass-Input")
+    signUpPassInput.setAttribute('placeholder','enter password');
+    signUpPassDiv.appendChild(signUpPassInput);
+
+    let signUpPassError = document.createElement('small');
+    signUpPassError.setAttribute('class','text-danger');
+    signUpPassDiv.appendChild(signUpPassError);
+
+    //sign-Up password return Error
+    let signUpPassValue;
+    signUpPassInput.addEventListener('input',(event)=>{
+        let signUpPassErrorReturn = userPassValidation(event.target.value);
+        signUpPassValue = event.target.value;
+        if(signUpPassErrorReturn ==0){
+            console.log("error 1");
+            signUpPassError.innerText = "password is required";
+        }
+        else if(signUpPassErrorReturn==1){
+            console.log("error 2");
+            signUpPassError.innerText ="password should contain more then 8 character or number";
+        }
+        else{
+            signUpPassError.innerText =" ";
+        }
+    })
+
+    //sign-UP button 
+    let signUpButton = document.createElement('button');
+    signUpButton.setAttribute('class',"form-control bg-success");
+    signUpButton.innerText="sign-Up";
+    signUPForm.appendChild(signUpButton);
+    
+    let signUpError = document.createElement('small');
+    signUpError.setAttribute('class',"text-danger");
+    signUPForm.appendChild(signUpError);
+
+    signUPForm.addEventListener('submit',(event)=>{
+        event.preventDefault();
+        let signUpUsernameInputValue = document.querySelector("#signUp-username-Input").value;
+        let signUpPassInputValue = document.querySelector("#signUP-pass-Input").value;
+        let signUpUsernameCheckReturn = usernameValidation(signUpUsernameInputValue);
+        let signUpPassCheckReturn = userPassValidation(signUpPassInputValue);
+        if(!signUpUsernameCheckReturn || !signUpPassCheckReturn){
+            signUpUsernameError.innerText ="username is required";
+            signUpPassError.innerText =" password is required";
+            signUpError.innerText = "please fill above feild";
+            return;
+        }
+            signUpUsernameError.innerText =" ";
+            signUpPassError.innerText =" ";
+            signUpError.innerText = " ";
+            window.alert("signUP successfully! Refresh and Login");
+            main.removeChild(sigUpContainer);
+            signIn();
+        
+    })
+
+    //sign-IN link 
+    let signInlinkMessage = document.createElement('a');
+    signInlinkMessage.innerText ="already have a account? sign-In";
+    signInlinkMessage.setAttribute('style',"cursor:pointer;color:blue;");
+    sigUpContainer.appendChild(signInlinkMessage);
+    signInlinkMessage.addEventListener('click',(event)=>{
+        
+        main.removeChild(sigUpContainer);
+        signIn();
+    })
 
     signUpValidation();
 
@@ -236,6 +357,11 @@ function signIn() {
     signInformContainer.setAttribute("style", "width:400px; background-color:#f2ebb6;")
     signInformContainer.setAttribute("class", "container mt-4 border border-1 border-warning  p-4");
     main.appendChild(signInformContainer)
+
+    let formCaption = document.createElement('h4');
+    formCaption.setAttribute('style',"color:#607502;margin-left:35%;margin-right:30%;");
+    formCaption.innerText="Sign-In";
+    signInformContainer.appendChild(formCaption);
 
     let form = document.createElement("form");
     signInformContainer.appendChild(form);
@@ -322,9 +448,9 @@ function signIn() {
     form.appendChild(signInErrorMessage);
 
     let sigupLinkMessage = document.createElement("a");
-    sigupLinkMessage.setAttribute('style',"cursor:pointer;")
+    sigupLinkMessage.setAttribute('style',"cursor:pointer;color:blue;")
     sigupLinkMessage.innerText="don't have account,sign-Up?";
-    form.appendChild(sigupLinkMessage);
+    signInformContainer.appendChild(sigupLinkMessage);
 
     // function sigInSubmit() {
     form.addEventListener('submit', (event) => {
