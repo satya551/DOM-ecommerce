@@ -9,11 +9,11 @@ function loadData() {
         productList = JSON.parse(jsonString);
         return productList
     }
-    function loadUserData() {
-        let userData = {
+    let userData = JSON.parse(localStorage.getItem("user-Info")) || [{ // local storage remain unchanged even after refreshing so after refreshing instead of setting default data first we take out the stored data (it prevents to lose previous added data because after refreshing we set default data and clear previous data wihtout of this line) so first we stored the data of local storage and after this we can add more data
                 username: "satya",
                 password: "51341567893"
-        }
+        }];
+    function loadUserData() {
         let userstring = JSON.stringify(userData);
         localStorage.setItem("user-Info", userstring);
     }
@@ -322,12 +322,24 @@ function signUp() {
             signUpError.innerText = "please fill above feild";
             return;
         }
-            signUpUsernameError.innerText =" ";
-            signUpPassError.innerText =" ";
-            signUpError.innerText = " ";
-            window.alert("signUP successfully! Refresh and Login");
-            main.removeChild(sigUpContainer);
-            signIn();
+        else{
+            let storedUserData = getUserData();
+           let registereUser = storedUserData.some((user)=>user.username==signUpUsernameInputValue);
+           if(registereUser){
+            signUpError.innerText="already have account using this username";
+            return
+           }
+            else{
+                userData.push({username:signUpUsernameInputValue,password:signUpPassInputValue});
+                loadUserData();
+                signUpUsernameError.innerText =" ";
+                signUpPassError.innerText =" ";
+                signUpError.innerText = " ";
+                window.alert("signUP successfully! Refresh and Login");
+                main.removeChild(sigUpContainer);
+                signIn();
+            }
+        }
         
     })
 
@@ -467,7 +479,8 @@ function signIn() {
         }
           let usernameId =document.getElementById("userId").value;
           let passwordId = document.getElementById("passwordId").value;
-           let usercheck = getUserData();
+           let allUsers = getUserData();
+           let usercheck = allUsers.find((user)=>user.username==usernameId);
             if(usercheck.username == usernameId &&  usercheck.password == passwordId){
                 signInErrorMessage.innerText = " ";
                 window.alert("login submitted successfully");
