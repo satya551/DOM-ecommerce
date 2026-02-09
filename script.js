@@ -3,26 +3,26 @@ function loadData() {
     let jsonString = JSON.stringify(data.products);
     localStorage.setItem("product-list", jsonString);
 }
+let count = 0;
+function getData() {
+    let jsonString = localStorage.getItem("product-list")
+    productList = JSON.parse(jsonString);
+    return productList
+}
+let userData = JSON.parse(localStorage.getItem("user-Info")) || [{ // local storage remain unchanged even after refreshing so after refreshing instead of setting default data first we take out the stored data (it prevents to lose previous added data because after refreshing we set default data and clear previous data wihtout of this line) so first we stored the data of local storage and after this we can add more data
+    username: "satya",
+    password: "51341567893"
+}];
+function loadUserData() {
+    let userstring = JSON.stringify(userData);
+    localStorage.setItem("user-Info", userstring);
+}
 
-    function getData() {
-        let jsonString = localStorage.getItem("product-list")
-        productList = JSON.parse(jsonString);
-        return productList
-    }
-    let userData = JSON.parse(localStorage.getItem("user-Info")) || [{ // local storage remain unchanged even after refreshing so after refreshing instead of setting default data first we take out the stored data (it prevents to lose previous added data because after refreshing we set default data and clear previous data wihtout of this line) so first we stored the data of local storage and after this we can add more data
-                username: "satya",
-                password: "51341567893"
-        }];
-    function loadUserData() {
-        let userstring = JSON.stringify(userData);
-        localStorage.setItem("user-Info", userstring);
-    }
-
-    function getUserData(){
-        let userstring = localStorage.getItem("user-Info");
-        let userd_data = JSON.parse(userstring);
-        return userd_data;
-    }
+function getUserData() {
+    let userstring = localStorage.getItem("user-Info");
+    let userd_data = JSON.parse(userstring);
+    return userd_data;
+}
 
 
 
@@ -223,133 +223,133 @@ function signUp() {
     //username field
     let main = document.querySelector("#main");
     let sigUpContainer = document.createElement("div");
-    sigUpContainer.setAttribute("style","width:400px;background-color:#f2ebb6;");
-    sigUpContainer.setAttribute("class","container mt-4 border border-1 border-warning p-4")
+    sigUpContainer.setAttribute("style", "width:400px;background-color:#f2ebb6;");
+    sigUpContainer.setAttribute("class", "container mt-4 border border-1 border-warning p-4")
     main.appendChild(sigUpContainer);
 
     let formCaption = document.createElement('h4');
-    formCaption.setAttribute('style',"color:#858204;margin-left:35%;margin-right:30%;");
-    formCaption.innerText="Sign-Up";
+    formCaption.setAttribute('style', "color:#858204;margin-left:35%;margin-right:30%;");
+    formCaption.innerText = "Sign-Up";
     sigUpContainer.appendChild(formCaption);
 
     let signUPForm = document.createElement('form');
     sigUpContainer.appendChild(signUPForm);
 
     let signUpUsernameDiv = document.createElement('div');
-    signUpUsernameDiv.setAttribute("style","form-group");
+    signUpUsernameDiv.setAttribute("style", "form-group");
     signUPForm.appendChild(signUpUsernameDiv);
 
     let signUpUsernameInput = document.createElement('input');
-    signUpUsernameInput.setAttribute('class',"form-control");
-    signUpUsernameInput.setAttribute('id',"signUp-username-Input");
-    signUpUsernameInput.setAttribute('type','text');
-    signUpUsernameInput.setAttribute('placeholder','enter username');
+    signUpUsernameInput.setAttribute('class', "form-control");
+    signUpUsernameInput.setAttribute('id', "signUp-username-Input");
+    signUpUsernameInput.setAttribute('type', 'text');
+    signUpUsernameInput.setAttribute('placeholder', 'enter username');
     signUpUsernameDiv.appendChild(signUpUsernameInput);
 
-    let signUpUsernameError = document.createElement('small') ;
-    signUpUsernameError.setAttribute('class',"text-danger");
+    let signUpUsernameError = document.createElement('small');
+    signUpUsernameError.setAttribute('class', "text-danger");
     signUpUsernameDiv.appendChild(signUpUsernameError);
 
     // let signUpuserNameReturn;
     let signUpUsernameValue;
-    signUpUsernameInput.addEventListener('input',(event)=>{
-        let  signUpuserNameReturn= usernameValidation(event.target.value);
+    signUpUsernameInput.addEventListener('input', (event) => {
+        let signUpuserNameReturn = usernameValidation(event.target.value);
         // signUpUsernameValue = event.target.value;
-        if(signUpuserNameReturn!=1){
+        if (signUpuserNameReturn != 1) {
             console.log("error 1");
-            signUpUsernameError.innerText="username is required";
+            signUpUsernameError.innerText = "username is required";
             console.log("after text printing");
         }
-        else{
-            signUpUsernameError =" ";
+        else {
+            signUpUsernameError = " ";
         }
     })
 
 
     //password field
     let signUpPassDiv = document.createElement('div');
-    signUpPassDiv.setAttribute("class","form-group pt-4");
+    signUpPassDiv.setAttribute("class", "form-group pt-4");
     signUPForm.appendChild(signUpPassDiv);
 
     let signUpPassInput = document.createElement('input');
-    signUpPassInput.setAttribute('class',"form-control");
-    signUpPassInput.setAttribute('type','password');
-    signUpPassInput.setAttribute('id',"signUP-pass-Input")
-    signUpPassInput.setAttribute('placeholder','enter password');
+    signUpPassInput.setAttribute('class', "form-control");
+    signUpPassInput.setAttribute('type', 'password');
+    signUpPassInput.setAttribute('id', "signUP-pass-Input")
+    signUpPassInput.setAttribute('placeholder', 'enter password');
     signUpPassDiv.appendChild(signUpPassInput);
 
     let signUpPassError = document.createElement('small');
-    signUpPassError.setAttribute('class','text-danger');
+    signUpPassError.setAttribute('class', 'text-danger');
     signUpPassDiv.appendChild(signUpPassError);
 
     //sign-Up password return Error
     let signUpPassValue;
-    signUpPassInput.addEventListener('input',(event)=>{
+    signUpPassInput.addEventListener('input', (event) => {
         let signUpPassErrorReturn = userPassValidation(event.target.value);
         signUpPassValue = event.target.value;
-        if(signUpPassErrorReturn ==0){
+        if (signUpPassErrorReturn == 0) {
             console.log("error 1");
             signUpPassError.innerText = "password is required";
         }
-        else if(signUpPassErrorReturn==1){
+        else if (signUpPassErrorReturn == 1) {
             console.log("error 2");
-            signUpPassError.innerText ="password should contain more then 8 character or number";
+            signUpPassError.innerText = "password should contain more then 8 character or number";
         }
-        else{
-            signUpPassError.innerText =" ";
+        else {
+            signUpPassError.innerText = " ";
         }
     })
 
     //sign-UP button 
     let signUpButton = document.createElement('button');
-    signUpButton.setAttribute('class',"form-control bg-success");
-    signUpButton.innerText="sign-Up";
+    signUpButton.setAttribute('class', "form-control bg-success");
+    signUpButton.innerText = "sign-Up";
     signUPForm.appendChild(signUpButton);
-    
+
     let signUpError = document.createElement('small');
-    signUpError.setAttribute('class',"text-danger");
+    signUpError.setAttribute('class', "text-danger");
     signUPForm.appendChild(signUpError);
 
-    signUPForm.addEventListener('submit',(event)=>{
+    signUPForm.addEventListener('submit', (event) => {
         event.preventDefault();
         let signUpUsernameInputValue = document.querySelector("#signUp-username-Input").value;
         let signUpPassInputValue = document.querySelector("#signUP-pass-Input").value;
         let signUpUsernameCheckReturn = usernameValidation(signUpUsernameInputValue);
         let signUpPassCheckReturn = userPassValidation(signUpPassInputValue);
-        if(!signUpUsernameCheckReturn || !signUpPassCheckReturn){
-            signUpUsernameError.innerText ="username is required";
-            signUpPassError.innerText =" password is required";
+        if (!signUpUsernameCheckReturn || !signUpPassCheckReturn) {
+            signUpUsernameError.innerText = "username is required";
+            signUpPassError.innerText = " password is required";
             signUpError.innerText = "please fill above feild";
             return;
         }
-        else{
+        else {
             let storedUserData = getUserData();
-           let registereUser = storedUserData.some((user)=>user.username==signUpUsernameInputValue);
-           if(registereUser){
-            signUpError.innerText="already have account using this username";
-            return
-           }
-            else{
-                userData.push({username:signUpUsernameInputValue,password:signUpPassInputValue});
+            let registereUser = storedUserData.some((user) => user.username == signUpUsernameInputValue);
+            if (registereUser) {
+                signUpError.innerText = "already have account using this username";
+                return
+            }
+            else {
+                userData.push({ username: signUpUsernameInputValue, password: signUpPassInputValue });
                 loadUserData();
-                signUpUsernameError.innerText =" ";
-                signUpPassError.innerText =" ";
+                signUpUsernameError.innerText = " ";
+                signUpPassError.innerText = " ";
                 signUpError.innerText = " ";
                 window.alert("signUP successfully! Refresh and Login");
                 main.removeChild(sigUpContainer);
                 signIn();
             }
         }
-        
+
     })
 
     //sign-IN link 
     let signInlinkMessage = document.createElement('a');
-    signInlinkMessage.innerText ="already have a account? sign-In";
-    signInlinkMessage.setAttribute('style',"cursor:pointer;color:blue;");
+    signInlinkMessage.innerText = "already have a account? sign-In";
+    signInlinkMessage.setAttribute('style', "cursor:pointer;color:blue;");
     sigUpContainer.appendChild(signInlinkMessage);
-    signInlinkMessage.addEventListener('click',(event)=>{
-        
+    signInlinkMessage.addEventListener('click', (event) => {
+
         main.removeChild(sigUpContainer);
         signIn();
     })
@@ -371,8 +371,8 @@ function signIn() {
     main.appendChild(signInformContainer)
 
     let formCaption = document.createElement('h4');
-    formCaption.setAttribute('style',"color:#607502;margin-left:35%;margin-right:30%;");
-    formCaption.innerText="Sign-In";
+    formCaption.setAttribute('style', "color:#607502;margin-left:35%;margin-right:30%;");
+    formCaption.innerText = "Sign-In";
     signInformContainer.appendChild(formCaption);
 
     let form = document.createElement("form");
@@ -385,7 +385,7 @@ function signIn() {
 
     let usernameInput = document.createElement("input");
     usernameInput.setAttribute("type", "text");
-    usernameInput.setAttribute("id","userId");
+    usernameInput.setAttribute("id", "userId");
     usernameInput.setAttribute("placeholder", "enter your username");
     usernameInput.setAttribute("class", "form-control");
     usernameDiv.appendChild(usernameInput);
@@ -418,7 +418,7 @@ function signIn() {
     form.appendChild(usernamePassDiv);
 
     let passwordInput = document.createElement("input");
-    passwordInput.setAttribute("id","passwordId");
+    passwordInput.setAttribute("id", "passwordId");
     passwordInput.setAttribute("class", "form-control");
     passwordInput.setAttribute('type', "password");
     passwordInput.setAttribute("placeholder", "enter password");
@@ -460,8 +460,8 @@ function signIn() {
     form.appendChild(signInErrorMessage);
 
     let sigupLinkMessage = document.createElement("a");
-    sigupLinkMessage.setAttribute('style',"cursor:pointer;color:blue;")
-    sigupLinkMessage.innerText="don't have account,sign-Up?";
+    sigupLinkMessage.setAttribute('style', "cursor:pointer;color:blue;")
+    sigupLinkMessage.innerText = "don't have account,sign-Up?";
     signInformContainer.appendChild(sigupLinkMessage);
 
     // function sigInSubmit() {
@@ -477,33 +477,105 @@ function signIn() {
             return;
 
         }
-          let usernameId =document.getElementById("userId").value;
-          let passwordId = document.getElementById("passwordId").value;
-           let allUsers = getUserData();
-           let usercheck = allUsers.find((user)=>user.username==usernameId);
-            if(usercheck.username == usernameId &&  usercheck.password == passwordId){
+        let usernameId = document.getElementById("userId").value;
+        let passwordId = document.getElementById("passwordId").value;
+        let allUsers = getUserData();
+        let usercheck = allUsers.find((user) => user.username == usernameId);
+        if (usercheck) {
+            if (usercheck.username == usernameId && usercheck.password == passwordId) {
                 signInErrorMessage.innerText = " ";
                 window.alert("login submitted successfully");
             }
-            else{
-                signInErrorMessage.innerText ="username or password is invalid";
+            else {
+                signInErrorMessage.innerText = "username or password is invalid";
                 return;
             }
-        
+        }
+        else{
+            window.alert("we couldn't found user for this username");
+            return ;
+        }
 
-        
+
+
         main.removeChild(signInformContainer);
 
         loadData();
         loadElement();
-        cartContainer();;
+        cartContainer();
 
     })
-    sigupLinkMessage.addEventListener('click',()=>{
+    sigupLinkMessage.addEventListener('click', () => {
         main.removeChild(signInformContainer);
         signUp();
     })
 
+
+}
+function signOut() {
+    let main = document.querySelector("#main");
+    let signOutContainer = document.createElement('div');
+    signOutContainer.setAttribute("class", 'border border-1 border-danger mt-4');
+    signOutContainer.setAttribute('style', 'width:400px;text-align:center;');
+    main.appendChild(signOutContainer);
+
+    let deleteAccountLogo = document.createElement('h4');
+    deleteAccountLogo.innerText = 'Delete Account';
+    deleteAccountLogo.setAttribute('class', 'text-danger');
+    signOutContainer.appendChild(deleteAccountLogo);
+
+    let signOutUsernameDiv = document.createElement('div');
+    signOutUsernameDiv.setAttribute('class', 'form-group')
+    signOutContainer.appendChild(signOutUsernameDiv);
+    let signOutUsernameInput = document.createElement('input');
+    signOutUsernameInput.setAttribute('class', 'form-control')
+    signOutUsernameInput.setAttribute('id', 'signOutUsername-Id');
+    signOutUsernameInput.setAttribute('type', 'text');
+    signOutUsernameInput.setAttribute('placeholder', 'enter username');
+    signOutUsernameDiv.appendChild(signOutUsernameInput);
+
+    let signOutPassDiv = document.createElement('div');
+    signOutPassDiv.setAttribute('class', 'form-group');
+    signOutContainer.appendChild(signOutPassDiv);
+
+    let signOutPassInput = document.createElement('input');
+    signOutPassInput.setAttribute('class', 'form-control');
+    signOutPassInput.setAttribute('id', "signOutPassInput-Id");
+    signOutPassInput.setAttribute('type', 'password');
+    signOutPassInput.setAttribute('placeholder', 'input password');
+    signOutPassDiv.appendChild(signOutPassInput);
+
+    let deleteButton = document.createElement('button');
+    deleteButton.setAttribute('class', 'form-control btn btn-success text-white');
+    deleteButton.innerText = "delete Account";
+
+    signOutContainer.appendChild(deleteButton);
+    deleteButton.addEventListener('click', () => {
+        let delUsernameValue = document.querySelector("#signOutUsername-Id").value;
+        let delPassValue = document.querySelector("#signOutPassInput-Id").value;
+        let checkUsersForDel = getUserData();
+        let findUserDel = checkUsersForDel.find((user) => user.username == delUsernameValue);
+        let findUserIndex;
+        if (findUserDel) {
+            findUserIndex = checkUsersForDel.indexOf(findUserDel);
+            if (findUserDel.username == delUsernameValue && findUserDel.password == delPassValue) {
+                userData.splice(findUserIndex, 1);
+                loadUserData();
+                main.remove(signOutContainer);
+                signUp();
+                window.alert("Account Deleted");
+
+            }
+            else {
+                window.alert("your password is incorrect");
+            }
+        }
+        else {
+            window.alert("user not found");
+        }
+
+
+    })
 
 }
 
@@ -542,36 +614,39 @@ function loadElement() {
         cartContainer();
     })
 
-    let loginDiv = document.createElement("div");
-    loginDiv.setAttribute("style", "height:50px; width:25%");
-    loginDiv.setAttribute("class", "border border-2 border-warning d-flex align-items-center justify-content-around");
-    header.appendChild(loginDiv);
+    let signOutCartDiv = document.createElement("div");
+    signOutCartDiv.setAttribute("style", "height:50px; width:25%");
+    signOutCartDiv.setAttribute("class", "border border-2 border-warning d-flex align-items-center justify-content-around");
+    header.appendChild(signOutCartDiv);
 
-    let signInButton = document.createElement("button");
-    signInButton.innerHTML = `<b style="color:red;">Sign-In</b>`;
-    signInButton.setAttribute("class", "btn btn-control bg-warning")
-    loginDiv.appendChild(signInButton);
+    let cart = document.createElement("div");
+    cart.setAttribute("class", "text-danger");
+    cart.innerHTML = `<i class="fa-solid fa-cart-plus"></i><b style="color:white; font-size:16px; border-radius:100%; ">${count}`
+    signOutCartDiv.appendChild(cart);
 
-    let signLink = document.createElement("a");
-    signInButton.appendChild(signLink);
-    signInButton.addEventListener('click', () => {
-        main.removeChild(cartdivContainer);
-        signIn();
+    let signOutButton = document.createElement('button');
+    signOutButton.setAttribute('class', 'bg-white text-danger border border-0 rounded font-weight-bolder');
+    signOutButton.innerText = "Delete Account";
+    signOutCartDiv.appendChild(signOutButton);
+
+    signOutButton.addEventListener('click', (event) => {
+        // let main = document.querySelector('#main');
+        // let signOutContainer = document.createElement("div");
+        // signOutContainer.setAttribute('class','container border border-1 border-warning');
+        // signOutContainer.setAttribute('style','width:400px;z-index:5;');
+
+        // main.appendChild(signOutContainer);
+        signOut();
     })
 
-    let signUpButton = document.createElement("button");
-    signUpButton.innerHTML = `<b style="color:red;">Sign-Up</b>`;
-    signUpButton.setAttribute("class", "btn btn-control bg-warning")
-    loginDiv.appendChild(signUpButton);
-
-    let sigUpLink = document.createElement("a");
-    signUpButton.appendChild(sigUpLink);
-    signUpButton.addEventListener('click', () => {
-        signUp();
-    })
 
 }
 loadUserData();
 signIn();
+
+//remove these
+// loadData();
+// loadElement();
+// cartContainer();
 
 
