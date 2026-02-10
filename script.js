@@ -3,7 +3,16 @@ function loadData() {
     let jsonString = JSON.stringify(data.products);
     localStorage.setItem("product-list", jsonString);
 }
+let addedItemArray =JSON.parse(localStorage.getItem('added-items'))||[];
 let count = 0;
+function loadAddedItems(){
+    localStorage.setItem('added-items',JSON.stringify(addedItemArray));
+    // localStorage.setItem('total-items',JSON.stringify(count));
+}
+function getAddedItems(){
+    let addedItems = JSON.parse(localStorage.getItem('added-items'));
+    return addedItems;
+}
 function getData() {
     let jsonString = localStorage.getItem("product-list")
     productList = JSON.parse(jsonString);
@@ -34,6 +43,7 @@ function itemMoreInfo(product) {
     let itemContainer = document.createElement("div");
     itemContainer.setAttribute("class", "container border border-1 border-success d-flex justify-content-around align-items-center m-4");
     itemContainer.setAttribute("style", "height:550px;");
+    itemContainer.setAttribute('id','itemContainer-Id');
     main.appendChild(itemContainer);
 
     let leftDiv = document.createElement("div");
@@ -129,11 +139,21 @@ function itemMoreInfo(product) {
     ratingInfo.innerHTML = `<b>Rating : ${product.rating}</b>`;
     rightDiv.appendChild(ratingInfo);
 
+    let addToCart = document.createElement('button');
+    addToCart.setAttribute('class','btn form-control btn-success text-dark mt-3');
+    addToCart.innerText ="Add to cart";
+    addToCart.setAttribute('id','addToCart-Id');
+    rightDiv.appendChild(addToCart);
+    addToCart.addEventListener('click',(event)=>{
+        count++;
+        addedItemArray.push(product);
+        loadAddedItems();
+    })
+
     let buyButton = document.createElement("button");
-    buyButton.setAttribute("class", " btn form-control btn-warning text-white")
+    buyButton.setAttribute("class", " btn form-control btn-warning text-white mt-3")
     buyButton.innerText = "Buy Now";
     rightDiv.appendChild(buyButton);
-
 }
 
 //showing all products
@@ -142,6 +162,7 @@ function cartContainer() {
     main.setAttribute("class", "d-flex flex-column align-items-center");
     let cartdivContainer = document.createElement("div");
     cartdivContainer.setAttribute("class", "container m-4")
+    cartdivContainer.setAttribute('id','cartdivContainer-Id')
     main.appendChild(cartdivContainer);
 
     let cartRow = document.createElement("div");
@@ -578,6 +599,45 @@ function signOut() {
     })
 
 }
+function myCart(){
+    console.log("myCart function called");
+    let addedItemsData = getAddedItems();
+    let main = document.querySelector("#main");
+    let cartItemContainer =document.createElement("div");
+    cartItemContainer.setAttribute('class','container border border-1 border-danger');
+    main.appendChild(cartItemContainer);
+    addedItemsData.forEach((cartItem)=>{
+        let cartDiv = document.createElement("div");
+        cartDiv.setAttribute('class',"d-flex align-items-center justify-content-around text-center border border-1 border-success")
+        cartDiv.setAttribute('style','height:100px;')
+        cartItemContainer.appendChild(cartDiv);
+        let itemImg = document.createElement('img');
+        itemImg.setAttribute("style","height:100px;")
+        itemImg.src = cartItem.thumbnail;
+        cartDiv.appendChild(itemImg);
+
+        let itemTitle = document.createElement('h5');
+        itemTitle.innerText = cartItem.title;
+        cartDiv.appendChild(itemTitle);
+
+        let itemPrice = document.createElement('h4');
+        itemPrice.innerText = `$ ${cartItem.price}`;
+        itemPrice.setAttribute('class','text-danger')
+        cartDiv.appendChild(itemPrice);
+
+        let removeButton = document.createElement('button');
+        removeButton.innerText = "Remove";
+        removeButton.setAttribute("class","btn-control bg-white text-danger border border-1 border-danger rounded")
+        cartDiv.appendChild(removeButton);
+
+        removeButton.addEventListener('click',(event)=>{
+            let indexOfItem =  addedItemsData.indexOf(cartItem);
+            addedItemArray.splice(indexOfItem,1);
+            loadAddedItems();
+            myCart();
+        })
+    })
+}
 
 //header / Nav
 function loadElement() {
@@ -619,10 +679,20 @@ function loadElement() {
     signOutCartDiv.setAttribute("class", "border border-2 border-warning d-flex align-items-center justify-content-around");
     header.appendChild(signOutCartDiv);
 
-    let cart = document.createElement("div");
-    cart.setAttribute("class", "text-danger");
-    cart.innerHTML = `<i class="fa-solid fa-cart-plus"></i><b style="color:white; font-size:16px; border-radius:100%; ">${count}`
-    signOutCartDiv.appendChild(cart);
+    let cartLogo = document.createElement("div");
+    cartLogo.setAttribute("class", "text-danger");
+    cartLogo.setAttribute('role','button');
+    cartLogo.innerHTML = `<i class="fa-solid fa-cart-plus"></i><b style="color:white; font-size:16px; border-radius:100%; ">${count}`
+    signOutCartDiv.appendChild(cartLogo);
+    cartLogo.addEventListener('click',(event)=>{
+        let main = document.querySelector("#main");
+        let cartContainer = document.querySelector("#cartdivContainer-Id")
+        main.removeChild(cartContainer);
+        let leftRightContainer = document.querySelector("#itemContainer-Id");
+        // main.removeChild(leftRightContainer);
+        myCart();
+    })
+    
 
     let signOutButton = document.createElement('button');
     signOutButton.setAttribute('class', 'bg-white text-danger border border-0 rounded font-weight-bolder');
@@ -641,12 +711,12 @@ function loadElement() {
 
 
 }
-loadUserData();
-signIn();
+// loadUserData();
+// signIn();
 
 //remove these
-// loadData();
-// loadElement();
-// cartContainer();
+loadData();
+loadElement();
+cartContainer();
 
 
