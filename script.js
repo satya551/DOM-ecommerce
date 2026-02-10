@@ -3,6 +3,7 @@ function loadData() {
     let jsonString = JSON.stringify(data.products);
     localStorage.setItem("product-list", jsonString);
 }
+let level = 0;
 let addedItemArray =JSON.parse(localStorage.getItem('added-items'))||[];
 let count = 0;
 function loadAddedItems(){
@@ -37,6 +38,7 @@ function getUserData() {
 
 //showing more details of a product
 function itemMoreInfo(product) {
+    level++;
     // let product= product;
     let main = document.querySelector("#main");
 
@@ -535,10 +537,14 @@ function signIn() {
 }
 function signOut() {
     let main = document.querySelector("#main");
+    let signOutBigContainer = document.createElement('div');
+    signOutBigContainer.setAttribute("class","container-fluid");
+    signOutBigContainer.setAttribute('style',"backdrop-filter: blur(10px);position:fixed;top:0px;width:100%;height:100%");
+    main.appendChild(signOutBigContainer);
     let signOutContainer = document.createElement('div');
     signOutContainer.setAttribute("class", 'border border-1 border-danger mt-4');
-    signOutContainer.setAttribute('style', 'width:400px;text-align:center;');
-    main.appendChild(signOutContainer);
+    signOutContainer.setAttribute('style', 'width:400px;text-align:center;position:fixed; top:100px;right:450px;');
+    signOutBigContainer.appendChild(signOutContainer);
 
     let deleteAccountLogo = document.createElement('h4');
     deleteAccountLogo.innerText = 'Delete Account';
@@ -582,9 +588,9 @@ function signOut() {
             if (findUserDel.username == delUsernameValue && findUserDel.password == delPassValue) {
                 userData.splice(findUserIndex, 1);
                 loadUserData();
-                main.remove(signOutContainer);
-                signUp();
+                main.removeChild(signOutContainer);
                 window.alert("Account Deleted");
+                signUp();
 
             }
             else {
@@ -634,6 +640,7 @@ function myCart(){
             let indexOfItem =  addedItemsData.indexOf(cartItem);
             addedItemArray.splice(indexOfItem,1);
             loadAddedItems();
+            main.removeChild(cartItemContainer);
             myCart();
         })
     })
@@ -687,9 +694,13 @@ function loadElement() {
     cartLogo.addEventListener('click',(event)=>{
         let main = document.querySelector("#main");
         let cartContainer = document.querySelector("#cartdivContainer-Id")
-        main.removeChild(cartContainer);
-        let leftRightContainer = document.querySelector("#itemContainer-Id");
-        // main.removeChild(leftRightContainer);
+        if(!level)
+            main.removeChild(cartContainer);
+        else{
+            let leftRightContainer = document.querySelector("#itemContainer-Id");
+            main.removeChild(leftRightContainer);
+        }
+            
         myCart();
     })
     
