@@ -588,7 +588,7 @@ function signOut() {
             if (findUserDel.username == delUsernameValue && findUserDel.password == delPassValue) {
                 userData.splice(findUserIndex, 1);
                 loadUserData();
-                main.removeChild(signOutContainer);
+                main.removeChild(signOutBigContainer);
                 window.alert("Account Deleted");
                 signUp();
 
@@ -610,19 +610,22 @@ function myCart(){
     let addedItemsData = getAddedItems();
     let main = document.querySelector("#main");
     let cartItemContainer =document.createElement("div");
-    cartItemContainer.setAttribute('class','container border border-1 border-danger');
+    cartItemContainer.setAttribute('class','container d-flex flex-cloumn border border-1 border-danger');
     main.appendChild(cartItemContainer);
-    addedItemsData.forEach((cartItem)=>{
+    let cartdivRow = document.createElement('div');
+    cartdivRow.setAttribute('class','row d-flex justify-content-around');
+    cartItemContainer.appendChild(cartdivRow);
+    addedItemsData.forEach((cartItem)=>{  
         let cartDiv = document.createElement("div");
-        cartDiv.setAttribute('class',"d-flex align-items-center justify-content-around text-center border border-1 border-success")
-        cartDiv.setAttribute('style','height:100px;')
-        cartItemContainer.appendChild(cartDiv);
+        cartDiv.setAttribute('class',"col-md-2 d-flex flex-column  align-items-center text-center pb-2 pt-2 m-1")
+        cartDiv.setAttribute('style','height:200px;background-color:gray;')
+        cartdivRow.appendChild(cartDiv);
         let itemImg = document.createElement('img');
-        itemImg.setAttribute("style","height:100px;")
+        itemImg.setAttribute("style","height:80px;width:80px;")
         itemImg.src = cartItem.thumbnail;
         cartDiv.appendChild(itemImg);
 
-        let itemTitle = document.createElement('h5');
+        let itemTitle = document.createElement('h6');
         itemTitle.innerText = cartItem.title;
         cartDiv.appendChild(itemTitle);
 
@@ -722,12 +725,12 @@ function loadElement() {
 
 
 }
-// loadUserData();
-// signIn();
+loadUserData();
+signIn();
 
 //remove these
-loadData();
-loadElement();
-cartContainer();
+// loadData();
+// loadElement();
+// cartContainer();
 
 
