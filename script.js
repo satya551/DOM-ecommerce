@@ -3,7 +3,7 @@ function loadData() {
     let jsonString = JSON.stringify(data.products);
     localStorage.setItem("product-list", jsonString);
 }
-
+let firstvisit = 0;
 let level = 0;
 let addedItemArray = JSON.parse(localStorage.getItem('added-items')) || {};
 let totalItems = 0;
@@ -43,7 +43,7 @@ function isPresent() {
 
 //showing more details of a product
 function itemMoreInfo(product) {
-    level =1;
+    level = 1;
     // let product= product;
     let main = document.querySelector("#main");
 
@@ -266,9 +266,11 @@ function signUpValidation() {
 //sign-Up form
 function signUp() {
     //create sign-UP page
+    
 
     //username field
     let main = document.querySelector("#main");
+    
     let sigUpContainer = document.createElement("div");
     sigUpContainer.setAttribute("style", "width:400px;background-color:#f2ebb6;");
     sigUpContainer.setAttribute("class", "container mt-4 border border-1 border-warning p-4")
@@ -384,6 +386,9 @@ function signUp() {
                 signUpError.innerText = " ";
                 window.alert("signUP successfully! Refresh and Login");
                 main.removeChild(sigUpContainer);
+                // if (firstvisit) {
+                //     headerdiv.setAttribute("style", "filter:blur(0);");
+                // }
                 signIn();
             }
         }
@@ -410,9 +415,13 @@ function signUp() {
 
 //sign-In form
 function signIn() {
+    // if (firstvisit) {
+    //     let headerdiv = document.querySelector("#header-id");
+    //     headerdiv.setAttribute("style", "filer:blur(10px);")
+    // }
     // create sign-In page
     let main = document.querySelector("#main");
-    
+
     let signInformContainer = document.createElement("div");
     signInformContainer.setAttribute("style", "width:400px; background-color:#f2ebb6;")
     signInformContainer.setAttribute("class", "container mt-4 border border-1 border-warning  p-4");
@@ -533,7 +542,13 @@ function signIn() {
             if (usercheck.username == usernameId && usercheck.password == passwordId) {
                 signInErrorMessage.innerText = " ";
                 window.alert("login submitted successfully");
+                // let headerdiv = document.querySelector("#header-id");
+                // if (firstvisit) {
+                //     headerdiv.setAttribute("style", "filter:blur(0);")
+                // }
                 sessionStorage.setItem("current-user", JSON.stringify(usercheck));
+                firstvisit=1;
+                
             }
             else {
                 signInErrorMessage.innerText = "username or password is invalid";
@@ -606,14 +621,17 @@ function signOut() {
     deleteButton.addEventListener('click', () => {
         let delUsernameValue = document.querySelector("#signOutUsername-Id").value;
         let delPassValue = document.querySelector("#signOutPassInput-Id").value;
+        let currentLoginUser = JSON.parse(sessionStorage.getItem('current-user'));
         let checkUsersForDel = getUserData();
         let findUserDel = checkUsersForDel.find((user) => user.username == delUsernameValue);
         let findUserIndex;
-        if (findUserDel) {
+        if (findUserDel && currentLoginUser.username == delUsernameValue) {
             findUserIndex = checkUsersForDel.indexOf(findUserDel);
             if (findUserDel.username == delUsernameValue && findUserDel.password == delPassValue) {
                 userData.splice(findUserIndex, 1);
                 loadUserData();
+                let headerdiv = document.querySelector("#header-id");
+                headerdiv.innerText =" ";
                 main.removeChild(signOutBigContainer);
                 window.alert("Account Deleted");
                 if (level == 1)
@@ -622,14 +640,15 @@ function signOut() {
                     main.removeChild(document.querySelector("#cartItemContainer-Id"))
                 }
                 else
-                 main.removeChild(document.querySelector("#cartdivContainer-Id"));
-                
-                 addedItemArray = getAddedItems();
+                    main.removeChild(document.querySelector("#cartdivContainer-Id"));
+
+                addedItemArray = getAddedItems();
                 let currentUser = JSON.parse(sessionStorage.getItem('current-user'));
                 delete addedItemArray[currentUser.username];
                 loadAddedItems();
                 sessionStorage.clear();
-                
+
+
                 signUp();
 
             }
@@ -646,46 +665,56 @@ function signOut() {
 
 }
 function myCart() {
-    level=2;
+    level = 2;
     console.log("myCart function called");
     let currentUser = JSON.parse(sessionStorage.getItem('current-user'));
-    let addedItemsData = getAddedItems();
+    addedItemArray = getAddedItems();
     let main = document.querySelector("#main");
     let cartItemContainer = document.createElement("div");
-    cartItemContainer.setAttribute('class', 'container d-flex flex-cloumn border border-1 border-danger');
+    cartItemContainer.setAttribute('class', 'container d-flex justify-content-between border border-1 border-danger p-2 mt-4');
     cartItemContainer.setAttribute('id', "cartItemContainer-Id");
     main.appendChild(cartItemContainer);
     let cartdivRow = document.createElement('div');
-    cartdivRow.setAttribute('class', 'row d-flex justify-content-around');
+    // cartdivRow.setAttribute('class', '');
+    cartdivRow.setAttribute('style', 'min-height:500px;width:69%;box-shadow:10px 10px 10px grey;')
     cartItemContainer.appendChild(cartdivRow);
+    let totalItemsInfo = document.createElement("div");
+    totalItemsInfo.setAttribute('style', 'min-height:30%;width:30%;box-shadow:10px 10px 10px grey;');
+    totalItemsInfo.setAttribute('class', 'd-flex')
+    cartItemContainer.appendChild(totalItemsInfo);
     let totolProductcost = 0;
-    let userCartAvailale=false;
-    for(let usernameAsKey in addedItemsData){
-        if((usernameAsKey ==currentUser.username)){
-            userCartAvailale =true;
+    let userCartAvailale = false;
+    for (let usernameAsKey in addedItemArray) {
+        if ((usernameAsKey == currentUser.username)) {
+            userCartAvailale = true;
         }
     }
-    if(!userCartAvailale){
-        cartdivRow.innerText ="Your cart is empty";
+    if (!userCartAvailale) {
+        cartdivRow.innerText = "Your cart is empty";
         return;
     }
-    else{
-        let currentUserObject = addedItemsData[currentUser.username];
+    else {
+        let currentUserObject = addedItemArray[currentUser.username];
         currentUserObject.forEach((cartItem) => {
+            totolProductcost = totolProductcost + cartItem.price;
             let cartDiv = document.createElement("div");
-            cartDiv.setAttribute('class', "col-md-2 d-flex flex-column  align-items-center text-center pb-2 pt-2 m-1")
-            cartDiv.setAttribute('style', 'height:200px;width:400px;background-color:gray;')
+            cartDiv.setAttribute('class', "d-flex justify-content-around align-items-center text-center pb-2 pt-2 m-1")
+            cartDiv.setAttribute('style', 'height:50px;widht:100%;background-color:gray;')
             cartdivRow.appendChild(cartDiv);
             let itemImg = document.createElement('img');
-            itemImg.setAttribute("style", "height:80px;width:80px;")
+            itemImg.setAttribute("style", "height:45px;width:80px;")
             itemImg.src = cartItem.thumbnail;
             cartDiv.appendChild(itemImg);
+
+            let productId = document.createElement('h4');
+            productId.innerText = cartItem.id;
+            cartDiv.appendChild(productId);
 
             let itemTitle = document.createElement('h6');
             itemTitle.innerText = cartItem.title;
             cartDiv.appendChild(itemTitle);
 
-            let itemPrice = document.createElement('h4');
+            let itemPrice = document.createElement('h5');
             itemPrice.innerText = `$ ${cartItem.price}`;
             itemPrice.setAttribute('class', 'text-danger')
             cartDiv.appendChild(itemPrice);
@@ -696,17 +725,27 @@ function myCart() {
             cartDiv.appendChild(removeButton);
 
             removeButton.addEventListener('click', (event) => {
-                let indexOfItem = addedItemsData.indexOf(cartItem);
-                addedItemArray.splice(indexOfItem, 1);
+                // let addedItemsCopy = {...addedItemArray};
+                let currentUserCart = addedItemArray[currentUser["username"]];
+                let choosedItem = currentUserCart.find((removalChoosed) => removalChoosed.id == cartItem.id)
+                let choosedItemIndex = currentUserCart.indexOf(choosedItem)
+                currentUserCart.splice(choosedItemIndex, 1);
                 loadAddedItems();
                 main.removeChild(cartItemContainer);
                 myCart();
             })
         })
+        let productText = document.createElement('div');
+        productText.innerHTML = `<p><b>Total Items :</b></p><p><b>Total Cost :</b></p>`;
+        productText.setAttribute('class', 'd-flex flex-column align-items-center border border-1 border-warning');
+        totalItemsInfo.appendChild(productText);
 
+        let productNumbers = document.createElement('div');
+        productNumbers.innerHTML = `<h4>${currentUserObject.length}</h4><h4>${Math.floor(totolProductcost)}</h4>`;
+        totalItemsInfo.appendChild(productNumbers);
     }
-    
 }
+
 
 //header / Nav
 function loadElement() {
@@ -716,12 +755,26 @@ function loadElement() {
     let header = document.createElement("div");
     header.setAttribute("class", "header");
     header.setAttribute("class", "container-fluid d-flex justify-content-center align-items-center bg-dark");
+    header.setAttribute('id', 'header-id');
     main.appendChild(header);
 
     let logoDiv = document.createElement("div");
-    logoDiv.setAttribute("style", "width:25%; height:50px;");
+    logoDiv.setAttribute("style", "width:25%; height:50px;cursor:pointer;");
     logoDiv.setAttribute("class", "border border-1 border-danger d-flex flex-column justify-content-around align-items-center text-center")
     header.appendChild(logoDiv);
+
+    logoDiv.addEventListener('click', () => {
+        if (level == 2) {
+            main.removeChild(document.querySelector("#cartItemContainer-Id"));
+            cartContainer();
+            level = 0;
+        }
+        else if (level == 1) {
+            main.removeChild(document.querySelector("#itemContainer-Id"));
+            cartContainer();
+            level = 0;
+        }
+    })
 
     let logoLabel = document.createElement("label");
     logoLabel.setAttribute("class", "d-flex")
